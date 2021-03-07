@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+Copyright 2021 sakibeko
+-->
+<resources>
+    <string name="app_name">SortVisual</string>
+    <string name="title_menu">メニュー</string>
+    <string name="label_sort_auto">自動</string>
+    <string name="label_sort_manual">手動</string>
+    <string name="label_button_previous">前へ</string>
+    <string name="label_button_next">次へ</string>
+    <!-- アルゴリズム一覧 -->
+    <string name="sort_selection">選択ソート</string>
+    <string name="sort_bubble">バブルソート</string>
+    <string name="sort_quick">クイックソート</string>
+</resources>

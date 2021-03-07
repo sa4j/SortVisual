@@ -1,0 +1,93 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs.kotlin'
+    id 'kotlin-android-extensions'
+}
+
+android {
+    compileSdkVersion rootProject.sdk_ver_compile
+    buildToolsVersion "30.0.2"
+
+    defaultConfig {
+        applicationId "com.sakibeko.sortvisual"
+        minSdkVersion rootProject.sdk_ver_min
+        targetSdkVersion rootProject.sdk_ver_target
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            testCoverageEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    buildFeatures {
+        dataBinding true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$ver_kotlin"
+
+    // AndroidX
+    implementation "androidx.appcompat:appcompat:$ver_appcompat"
+    implementation "androidx.recyclerview:recyclerview:$ver_recyclerview"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$ver_swiperefreshlayout"
+    implementation "androidx.constraintlayout:constraintlayout:$ver_constraintlayout"
+    implementation "androidx.core:core-ktx:$ver_core"
+    // ktx
+    implementation "androidx.activity:activity-ktx:$ver_activity_ktx"
+    implementation "androidx.fragment:fragment-ktx:$ver_fragment_ktx"
+    implementation "androidx.navigation:navigation-fragment-ktx:$ver_navigation"
+    implementation "androidx.navigation:navigation-ui-ktx:$ver_navigation"
+
+    // Architecture Components
+    implementation "androidx.room:room-runtime:$ver_room"
+    kapt "androidx.room:room-compiler:$ver_room"
+    implementation "androidx.room:room-ktx:$ver_room"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$ver_arch_lifecycle"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$ver_arch_lifecycle"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$ver_arch_lifecycle"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$ver_hilt_lifecycle"
+    kapt "androidx.hilt:hilt-compiler:$ver_hilt_lifecycle"
+
+    // design
+    implementation "com.google.android.material:material:$ver_material"
+
+    // Local unit tests
+    testImplementation "junit:junit:$ver_junit"
+
+    // Android unit tests
+    androidTestImplementation "junit:junit:$ver_junit"
+    androidTestImplementation "androidx.test.ext:junit:$ver_androidx_junit"
+    androidTestImplementation "androidx.test.ext:junit-ktx:$ver_test_androidktx_runner"
+    androidTestImplementation "androidx.test:core-ktx:$ver_test_androidx_core"
+    androidTestImplementation "androidx.test:rules:$ver_androidx_junit"
+    androidTestImplementation "androidx.room:room-testing:$ver_room"
+    androidTestImplementation "androidx.arch.core:core-testing:$ver_test_arch"
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-reflect:$ver_kotlin"
+
+    androidTestImplementation "androidx.test.espresso:espresso-core:$ver_espresso"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$ver_espresso"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$ver_espresso"
+    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$ver_espresso"
+    androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$ver_espresso"
+}

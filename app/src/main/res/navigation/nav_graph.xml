@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/dest_top">
+
+    <fragment
+        android:id="@+id/dest_top"
+        android:name="com.sakibeko.sortvisual.MenuFragment"
+        android:label="@string/title_menu"
+        tools:layout="@layout/fragment_menu">
+
+        <action
+            android:id="@+id/action_menu_to_visual"
+            app:destination="@id/dest_sort" />
+    </fragment>
+    <fragment
+        android:id="@+id/dest_sort"
+        android:name="com.sakibeko.sortvisual.VisualFragment"
+        android:label="{algorithmName}"
+        tools:layout="@layout/fragment_visual">
+        <argument
+            android:name="algorithmName"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="algorithmId"
+            android:defaultValue="0"
+            app:argType="integer" />
+    </fragment>
+</navigation>
