@@ -82,13 +82,16 @@ abstract class ISort(private val mTargetData: MutableList<Int>) {
      * 入れ替えが必要であれば入れ替える.
      * 同時に履歴を保存する.
      */
-    protected fun swapIfNeeded(targetData: MutableList<Int>, frontIndex: Int, backIndex: Int) {
+    protected fun swapIfNeeded(
+        targetData: MutableList<Int>, frontIndex: Int, backIndex: Int
+    ): Boolean {
         mCompareHistories.add(Pair(frontIndex, backIndex))
         if (targetData[frontIndex] <= targetData[backIndex]) {
-            return
+            return false
         }
         mSwapHistories.add(mCompareHistories[mCompareHistories.size - 1])
         swapWithoutHistory(targetData, frontIndex, backIndex)
+        return true
     }
 
     /**
