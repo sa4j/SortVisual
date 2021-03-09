@@ -15,8 +15,8 @@ class QuickSort(targetData: MutableList<Int>) : ISort(targetData) {
      * ソートを1step進める.
      */
     override fun next() {
-        mAdditionalIndex = mPivotHistories[mStepNo]
         super.next()
+        mAdditionalIndex = mPivotHistories[mStepNo - 1]
     }
 
     /**
