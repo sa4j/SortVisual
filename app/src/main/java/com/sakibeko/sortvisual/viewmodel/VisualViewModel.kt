@@ -29,13 +29,13 @@ class VisualViewModel(targetSize: Int, algorithmId: Int) : ViewModel() {
     val mTargetData = MutableLiveData<List<Int>>()
 
     /** 比較位置(前方) */
-    val mFrontCursor = MutableLiveData<Int>()
+    val mFrontPosition = MutableLiveData<Int>()
 
     /** 比較位置(後方) */
-    val mBackCursor = MutableLiveData<Int>()
+    val mBackPosition = MutableLiveData<Int>()
 
     /** 比較位置(追加) */
-    val mAdditionalCursor = MutableLiveData<Int>()
+    val mAdditionalPosition = MutableLiveData<Int>()
 
     /** ソートアルゴリズム */
     private val mSortAlgorithm: ISort
@@ -130,9 +130,9 @@ class VisualViewModel(targetSize: Int, algorithmId: Int) : ViewModel() {
      * 現在の比較位置を設定する.
      */
     private fun setCurrentPosition() {
-        mFrontCursor.value = mSortAlgorithm.getFrontPosition()
-        mBackCursor.value = mSortAlgorithm.getBackPosition()
-        mAdditionalCursor.value = mSortAlgorithm.getAdditionalPosition()
+        mFrontPosition.value = mSortAlgorithm.getFrontPosition()
+        mBackPosition.value = mSortAlgorithm.getBackPosition()
+        mAdditionalPosition.value = mSortAlgorithm.getAdditionalPosition()
     }
 
 }

@@ -66,15 +66,15 @@ class VisualFragment : Fragment() {
             sortResultView.mTargetData = it
             sortResultView.invalidate()
         })
-        mViewModel.mFrontCursor.observe(viewLifecycleOwner, {
+        mViewModel.mFrontPosition.observe(viewLifecycleOwner, {
             sortResultView.mFrontCursor = it
             sortResultView.invalidate()
         })
-        mViewModel.mBackCursor.observe(viewLifecycleOwner, {
+        mViewModel.mBackPosition.observe(viewLifecycleOwner, {
             sortResultView.mBackCursor = it
             sortResultView.invalidate()
         })
-        mViewModel.mAdditionalCursor.observe(viewLifecycleOwner, {
+        mViewModel.mAdditionalPosition.observe(viewLifecycleOwner, {
             sortResultView.mAdditionalCursor = it
             sortResultView.invalidate()
         })
