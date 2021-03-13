@@ -33,23 +33,23 @@ class QuickSort(targetData: MutableList<Int>) : ISort(targetData) {
     /**
      * クイックソートでソートする.
      */
-    private fun quickSort(targetData: MutableList<Int>, leftIndex: Int, rightIndex: Int) {
+    private fun quickSort(targetData: MutableList<Int>, frontIndex: Int, backIndex: Int) {
         // 比較位置が重複している場合、何もしない
-        if (rightIndex - leftIndex <= 1) {
+        if (backIndex - frontIndex <= 1) {
             return
         }
 
         // 1.基準値を決定する
         // (今回は真ん中にある値を基準値に選んでいる.選び方は色々ある.)
-        val pivotIndex = (leftIndex + rightIndex) / 2
+        val pivotIndex = (frontIndex + backIndex) / 2
         val pivot = targetData[pivotIndex]
-        val newPivotIndex = rightIndex - 1
+        val newPivotIndex = backIndex - 1
         // 基準値を右端に移動する
         swapAndSavePivot(targetData, pivotIndex, newPivotIndex, newPivotIndex)
 
         // 2.「基準値未満」は前方に、「基準値以上」は後方に移動する.
-        var i = leftIndex
-        for (j in leftIndex until rightIndex) {
+        var i = frontIndex
+        for (j in frontIndex until backIndex) {
             if (targetData[j] < pivot) {
                 // 「基準値未満」であれば入れ替える(「基準値未満」は前方に移動する).
                 swapAndSavePivot(targetData, i++, j, newPivotIndex)
@@ -63,27 +63,27 @@ class QuickSort(targetData: MutableList<Int>) : ISort(targetData) {
         swapAndSavePivot(targetData, i, newPivotIndex, newPivotIndex)
 
         // 4.「基準値未満」に対して再帰的に処理を行う.
-        quickSort(targetData, leftIndex, i)
+        quickSort(targetData, frontIndex, i)
         // 5.「基準値以上」に対して再帰的に処理を行う.
-        quickSort(targetData, i + 1, rightIndex)
+        quickSort(targetData, i + 1, backIndex)
     }
 
     /**
      * 入れ替え処理と同時に基準値を保存する.
      */
     private fun swapAndSavePivot(
-        targetData: MutableList<Int>, leftIndex: Int, rightIndex: Int, pivotIndex: Int
+        targetData: MutableList<Int>, frontIndex: Int, backIndex: Int, pivotIndex: Int
     ) {
-        swap(targetData, leftIndex, rightIndex)
+        swap(targetData, frontIndex, backIndex)
         mPivotHistories.add(pivotIndex)
     }
 
     /**
      * 比較履歴を保存する.
      */
-    private fun saveComparisonHistory(leftIndex: Int, rightIndex: Int, pivotIndex: Int) {
+    private fun saveComparisonHistory(frontIndex: Int, backIndex: Int, pivotIndex: Int) {
         mSortHistories.add(emptyMap())
-        mComparisonHistories.add(Pair(leftIndex, rightIndex))
+        mComparisonHistories.add(Pair(frontIndex, backIndex))
         mPivotHistories.add(pivotIndex)
     }
 
