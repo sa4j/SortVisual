@@ -28,23 +28,23 @@ class VisualViewModel(targetSize: Int, algorithmId: Int) : ViewModel() {
     /** ソート対象のデータ */
     val mTargetData = MutableLiveData<List<Int>>()
 
-    /** カーソル:前方 */
+    /** 比較位置(前方) */
     val mFrontCursor = MutableLiveData<Int>()
 
-    /** カーソル:後方 */
+    /** 比較位置(後方) */
     val mBackCursor = MutableLiveData<Int>()
 
-    /** カーソル:追加 */
+    /** 比較位置(追加) */
     val mAdditionalCursor = MutableLiveData<Int>()
 
     /** ソートアルゴリズム */
     private val mSortAlgorithm: ISort
 
     /**
-     * ソート結果の前進フラグ.
-     * true:ソート結果を進める  false:ソート結果を戻す.
+     * ソートの再生方向フラグ.
+     * true:順再生する  false:逆再生する
      */
-    private var mIsProgress = true
+    private var mIsPlay = true
 
     /** 自動ソート用のハンドラ */
     private val mHandler = Handler(Looper.myLooper())
@@ -52,7 +52,7 @@ class VisualViewModel(targetSize: Int, algorithmId: Int) : ViewModel() {
     /** 自動ソート用のRunnable */
     private val mRunnable = object : Runnable {
         override fun run() {
-            if (!showStep()) {
+            if (!playback()) {
                 return
             }
 
@@ -68,9 +68,11 @@ class VisualViewModel(targetSize: Int, algorithmId: Int) : ViewModel() {
         mTargetData.value = targetData
         // ソートアルゴリズムを生成する
         mSortAlgorithm = provideSortAlgorithm(algorithmId, targetData)
-        // ソートする
-        mSortAlgorithm.sort()
+        mSortAlgorithm.setup()
+        // 現在の比較位置を設定する
+        setCurrentPosition()
     }
+
 
     /**
      * 自動でソートする.
@@ -78,7 +80,7 @@ class VisualViewModel(targetSize: Int, algorithmId: Int) : ViewModel() {
     fun auto(isAuto: Boolean) {
         mIsAutoProgress.value = isAuto
         if (isAuto) {
-            mIsProgress = true
+            mIsPlay = true
             mHandler.post(mRunnable)
         } else {
             mHandler.removeCallbacks(mRunnable)
@@ -86,43 +88,51 @@ class VisualViewModel(targetSize: Int, algorithmId: Int) : ViewModel() {
     }
 
     /**
-     * ソート結果を1step進める.
+     * ソート結果を1step再生する.
      */
-    fun next() {
-        mIsProgress = true
-        showStep()
+    fun play() {
+        mIsPlay = true
+        playback()
     }
 
     /**
-     * ソート結果を1step戻す.
+     * ソート結果を1step逆再生する.
      */
-    fun previous() {
-        mIsProgress = false
-        showStep()
+    fun back() {
+        mIsPlay = false
+        playback()
     }
 
     /**
-     * ソート結果を1step表示する.
+     * ソート結果を1step再生・逆再生する.
      * @return 表示内容に変更があればtrueを返す
      */
-    private fun showStep(): Boolean {
-        if (mIsProgress) {
-            if (mSortAlgorithm.isCompleted()) {
+    private fun playback(): Boolean {
+        if (mIsPlay) {
+            if (!mSortAlgorithm.canPlay()) {
                 return false
             }
-            mSortAlgorithm.next()
+            mSortAlgorithm.play()
         } else {
-            if (mSortAlgorithm.isFirst()) {
+            if (!mSortAlgorithm.canBack()) {
                 return false
             }
-            mSortAlgorithm.previous()
+            mSortAlgorithm.back()
         }
 
-        mFrontCursor.value = mSortAlgorithm.mFrontIndex
-        mBackCursor.value = mSortAlgorithm.mBackIndex
-        mAdditionalCursor.value = mSortAlgorithm.mAdditionalIndex
+        // 現在の比較位置を設定する
+        setCurrentPosition()
 
         return true
+    }
+
+    /**
+     * 現在の比較位置を設定する.
+     */
+    private fun setCurrentPosition() {
+        mFrontCursor.value = mSortAlgorithm.getFrontPosition()
+        mBackCursor.value = mSortAlgorithm.getBackPosition()
+        mAdditionalCursor.value = mSortAlgorithm.getAdditionalPosition()
     }
 
 }

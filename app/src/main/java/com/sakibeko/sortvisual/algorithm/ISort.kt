@@ -3,65 +3,21 @@
  */
 package com.sakibeko.sortvisual.algorithm
 
+/**
+ * ISortはソート処理の過程を記録してstep単位で再生する機能を提供する.
+ */
 abstract class ISort(private val mTargetData: MutableList<Int>) {
 
-    /** インデックス:前方 */
-    var mFrontIndex: Int = -1
-        protected set
+    /** 現在の再生位置 */
+    protected var mPlaybackPosition = 0
+        private set
 
-    /** インデックス:後方 */
-    var mBackIndex: Int = -1
-        protected set
-
-    /** インデックス:追加 */
-    var mAdditionalIndex: Int = -1
-        protected set
-
-    /** step番号 */
-    var mStepNo = 0
-        protected set
+    /** 変更履歴 */
+    protected val mSortHistories = mutableListOf<Map<Int, Pair<Int, Int>>>()
 
     /** 比較履歴 */
-    protected val mCompareHistories = mutableListOf<Pair<Int, Int>>()
+    protected val mComparisonHistories = mutableListOf<Pair<Int, Int>>()
 
-    /** 入れ替え履歴 */
-    private val mSwapHistories = mutableListOf<Pair<Int, Int>>()
-
-
-    /**
-     * ソートする.
-     */
-    fun sort() = sort(mTargetData.toMutableList())
-
-    /**
-     * 初回判定.
-     * @return 初回であればtrueを返す.
-     */
-    fun isFirst(): Boolean {
-        return mStepNo == 0
-    }
-
-    /**
-     * 完了判定.
-     * @return ソートが完了したらtrueを返す.
-     */
-    fun isCompleted(): Boolean {
-        return mStepNo == mCompareHistories.size
-    }
-
-    /**
-     * ソートを1step進める.
-     */
-    open fun next() {
-        step(mCompareHistories[mStepNo++])
-    }
-
-    /**
-     * ソートを1step戻す.
-     */
-    open fun previous() {
-        step(mCompareHistories[--mStepNo])
-    }
 
     /**
      * ソートする(ソートアルゴリズムを実装する).
@@ -69,58 +25,116 @@ abstract class ISort(private val mTargetData: MutableList<Int>) {
     protected abstract fun sort(targetData: MutableList<Int>)
 
     /**
-     * 入れ替える.
-     * 同時に履歴を保存する.
+     * 初期化する.
      */
-    protected fun swap(targetData: MutableList<Int>, frontIndex: Int, backIndex: Int) {
-        mCompareHistories.add(Pair(frontIndex, backIndex))
-        mSwapHistories.add(mCompareHistories[mCompareHistories.size - 1])
-        swapWithoutHistory(targetData, frontIndex, backIndex)
+    fun setup() = sort(mTargetData.toMutableList())
+
+    /**
+     * 順再生が可能か否かを返す.
+     * @return 順再生が可能であればtrueを返す.
+     */
+    fun canPlay(): Boolean {
+        return mPlaybackPosition < mSortHistories.size
     }
 
     /**
-     * 入れ替えが必要であれば入れ替える.
-     * 同時に履歴を保存する.
+     * 逆再生が可能か否かを返す.
+     * @return 逆再生が可能であればtrueを返す.
+     */
+    fun canBack(): Boolean {
+        return mPlaybackPosition > 0
+    }
+
+    /**
+     * 順再生する.
+     */
+    fun play() {
+        mSortHistories[mPlaybackPosition++].forEach { (k, v) ->
+            mTargetData[k] = v.second
+        }
+    }
+
+    /**
+     * 逆再生する.
+     */
+    fun back() {
+        mSortHistories[--mPlaybackPosition].forEach { (k, v) ->
+            mTargetData[k] = v.first
+        }
+    }
+
+    /**
+     * 比較位置(前方)を取得する.
+     */
+    fun getFrontPosition() = getCurrentPositions().first
+
+    /**
+     * 比較位置(後方)を取得する.
+     */
+    fun getBackPosition() = getCurrentPositions().second
+
+    /**
+     * 比較位置(追加)を取得する.
+     */
+    open fun getAdditionalPosition() = -1
+
+    /**
+     * データを入れ替える.
+     * 同時に変更履歴を保存する.
+     */
+    protected fun swap(targetData: MutableList<Int>, frontIndex: Int, backIndex: Int) {
+        mComparisonHistories.add(Pair(frontIndex, backIndex))
+        val beforeData = targetData.toList()
+        swapWithoutHistory(targetData, frontIndex, backIndex)
+        saveSortHistory(beforeData, targetData)
+    }
+
+    /**
+     * 必要であればデータを入れ替える.
+     * 同時に変更履歴を保存する.
      */
     protected fun swapIfNeeded(
         targetData: MutableList<Int>, frontIndex: Int, backIndex: Int
     ): Boolean {
-        mCompareHistories.add(Pair(frontIndex, backIndex))
-        if (targetData[frontIndex] <= targetData[backIndex]) {
-            return false
-        }
-        mSwapHistories.add(mCompareHistories[mCompareHistories.size - 1])
-        swapWithoutHistory(targetData, frontIndex, backIndex)
-        return true
-    }
-
-    /**
-     * ソートを1step進める/戻す.
-     */
-    private fun step(compareTarget: Pair<Int, Int>) {
-        mFrontIndex = compareTarget.first
-        mBackIndex = compareTarget.second
-        if (containsInSwapHistories(compareTarget)) {
-            swapWithoutHistory(mTargetData, mFrontIndex, mBackIndex)
+        return if (targetData[frontIndex] > targetData[backIndex]) {
+            swap(targetData, frontIndex, backIndex)
+            true
+        } else {
+            mComparisonHistories.add(Pair(frontIndex, backIndex))
+            mSortHistories.add(emptyMap())
+            false
         }
     }
 
     /**
-     * 入れ替え履歴に存在すればtrueを返す.
+     * 変更履歴を保存する.
      */
-    private fun containsInSwapHistories(compareTarget: Pair<Int, Int>): Boolean {
-        mSwapHistories.forEach {
-            if (it === compareTarget) {
-                return true
+    private fun saveSortHistory(beforeData: List<Int>, targetData: List<Int>) {
+        val sortHistory = mutableMapOf<Int, Pair<Int, Int>>()
+        mSortHistories.add(sortHistory)
+        for (i in beforeData.indices) {
+            if (beforeData[i] != targetData[i]) {
+                sortHistory[i] = Pair(beforeData[i], targetData[i])
             }
         }
-        return false
+    }
+
+    /**
+     * 現在の比較履歴を取得する.
+     */
+    private fun getCurrentPositions(): Pair<Int, Int> {
+        return if (canPlay()) {
+            mComparisonHistories[mPlaybackPosition]
+        } else {
+            mComparisonHistories[mSortHistories.size - 1]
+        }
     }
 
 }
 
 /**
- * 入れ替える.
+ * データを入れ替える.
+ * 同時に変更履歴を保存しない.
  */
 private fun swapWithoutHistory(targetData: MutableList<Int>, frontIndex: Int, backIndex: Int) {
     val tmp = targetData[frontIndex]

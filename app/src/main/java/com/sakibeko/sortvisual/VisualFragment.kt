@@ -85,10 +85,10 @@ class VisualFragment : Fragment() {
      */
     private fun setViewEvents(view: View) {
         view.findViewById<Button>(R.id.button_previous).setOnClickListener {
-            mViewModel.previous()
+            mViewModel.back()
         }
         view.findViewById<Button>(R.id.button_next).setOnClickListener {
-            mViewModel.next()
+            mViewModel.play()
         }
         view.findViewById<ToggleButton>(R.id.button_sort_auto)
             .setOnCheckedChangeListener { _, isChecked ->

@@ -11,27 +11,23 @@ class QuickSort(targetData: MutableList<Int>) : ISort(targetData) {
     /** 基準値の履歴 */
     private val mPivotHistories = mutableListOf<Int>()
 
-    /**
-     * ソートを1step進める.
-     */
-    override fun next() {
-        super.next()
-        mAdditionalIndex = mPivotHistories[mStepNo - 1]
-    }
 
     /**
-     * ソートを1step戻す.
-     */
-    override fun previous() {
-        super.previous()
-        mAdditionalIndex = mPivotHistories[mStepNo]
-    }
-
-    /**
-     * ソートする(ソートアルゴリズムを実装する).
+     * ソートする.
      */
     override fun sort(targetData: MutableList<Int>) {
         quickSort(targetData, 0, targetData.size)
+    }
+
+    /**
+     * 比較位置(追加)を取得する.
+     */
+    override fun getAdditionalPosition(): Int {
+        return if (canPlay()) {
+            mPivotHistories[mPlaybackPosition]
+        } else {
+            mPivotHistories[mSortHistories.size - 1]
+        }
     }
 
     /**
@@ -54,11 +50,12 @@ class QuickSort(targetData: MutableList<Int>) : ISort(targetData) {
         // 2.「基準値未満」は前方に、「基準値以上」は後方に移動する.
         var i = leftIndex
         for (j in leftIndex until rightIndex) {
-            // ソートアルゴリズムを可視化するためにindexを保存する(ソートアルゴリズムとは無関係である).
-            saveIndices(i, j, newPivotIndex)
             if (targetData[j] < pivot) {
                 // 「基準値未満」であれば入れ替える(「基準値未満」は前方に移動する).
                 swapAndSavePivot(targetData, i++, j, newPivotIndex)
+            } else {
+                // ソートアルゴリズムを可視化するために比較履歴を保存する(ソートアルゴリズムとは無関係である).
+                saveComparisonHistory(i, j, newPivotIndex)
             }
         }
 
@@ -82,10 +79,11 @@ class QuickSort(targetData: MutableList<Int>) : ISort(targetData) {
     }
 
     /**
-     * インデックスを保存する.
+     * 比較履歴を保存する.
      */
-    private fun saveIndices(leftIndex: Int, rightIndex: Int, pivotIndex: Int) {
-        mCompareHistories.add(Pair(leftIndex, rightIndex))
+    private fun saveComparisonHistory(leftIndex: Int, rightIndex: Int, pivotIndex: Int) {
+        mSortHistories.add(emptyMap())
+        mComparisonHistories.add(Pair(leftIndex, rightIndex))
         mPivotHistories.add(pivotIndex)
     }
 
