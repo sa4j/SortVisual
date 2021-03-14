@@ -61,4 +61,9 @@ class MenuFragment : Fragment() {
 }
 
 private val ALGORITHM_LIST =
-    listOf(R.string.sort_selection, R.string.sort_bubble, R.string.sort_quick)
+    listOf(
+        R.string.sort_selection,
+        R.string.sort_bubble,
+        R.string.sort_quick,
+        R.string.sort_insertion
+    )

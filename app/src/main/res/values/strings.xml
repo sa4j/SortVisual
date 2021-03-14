@@ -12,4 +12,5 @@ Copyright 2021 sakibeko
     <string name="sort_selection">選択ソート</string>
     <string name="sort_bubble">バブルソート</string>
     <string name="sort_quick">クイックソート</string>
+    <string name="sort_insertion">挿入ソート</string>
 </resources>

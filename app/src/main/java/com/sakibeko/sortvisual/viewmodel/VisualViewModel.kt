@@ -8,10 +8,7 @@ import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sakibeko.sortvisual.R
-import com.sakibeko.sortvisual.algorithm.BubbleSort
-import com.sakibeko.sortvisual.algorithm.ISort
-import com.sakibeko.sortvisual.algorithm.QuickSort
-import com.sakibeko.sortvisual.algorithm.SelectionSort
+import com.sakibeko.sortvisual.algorithm.*
 import kotlin.random.Random
 
 /**
@@ -161,6 +158,7 @@ private fun provideSortAlgorithm(id: Int, targetData: MutableList<Int>): ISort {
         R.string.sort_selection -> SelectionSort(targetData)
         R.string.sort_bubble -> BubbleSort(targetData)
         R.string.sort_quick -> QuickSort(targetData)
+        R.string.sort_insertion -> InsertionSort(targetData)
         else -> throw IllegalArgumentException("Unsupported algorithm.")
     }
 }
