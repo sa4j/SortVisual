@@ -159,6 +159,7 @@ private fun provideSortAlgorithm(id: Int, targetData: MutableList<Int>): ISort {
         R.string.sort_bubble -> BubbleSort(targetData)
         R.string.sort_quick -> QuickSort(targetData)
         R.string.sort_insertion -> InsertionSort(targetData)
+        R.string.sort_merge -> MergeSort(targetData)
         else -> throw IllegalArgumentException("Unsupported algorithm.")
     }
 }

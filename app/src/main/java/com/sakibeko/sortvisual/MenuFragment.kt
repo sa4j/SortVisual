@@ -65,5 +65,6 @@ private val ALGORITHM_LIST =
         R.string.sort_selection,
         R.string.sort_bubble,
         R.string.sort_quick,
-        R.string.sort_insertion
+        R.string.sort_insertion,
+        R.string.sort_merge
     )
