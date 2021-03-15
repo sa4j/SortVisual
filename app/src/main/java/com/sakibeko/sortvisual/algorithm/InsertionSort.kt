@@ -19,14 +19,14 @@ class InsertionSort(targetData: MutableList<Int>) : ISort(targetData) {
             while (j > 0) {
                 if (targetData[j - 1] > insertionValue) {
                     replaceValue(targetData, j, targetData[j - 1])
-                    mComparisonHistories.add(Pair(j - 1, j))
+                    saveComparisonHistory(j - 1, j)
                     --j
                 } else {
                     break
                 }
             }
             replaceValue(targetData, j, insertionValue)
-            mComparisonHistories.add(Pair(-1, j))
+            saveComparisonHistory(-1, j)
         }
     }
 

@@ -83,7 +83,7 @@ class QuickSort(targetData: MutableList<Int>) : ISort(targetData) {
      */
     private fun saveComparisonHistory(frontIndex: Int, backIndex: Int, pivotIndex: Int) {
         mSortHistories.add(emptyMap())
-        mComparisonHistories.add(Pair(frontIndex, backIndex))
+        saveComparisonHistory(frontIndex, backIndex)
         mPivotHistories.add(pivotIndex)
     }
 

@@ -16,7 +16,7 @@ abstract class ISort(private val mTargetData: MutableList<Int>) {
     protected val mSortHistories = mutableListOf<Map<Int, Pair<Int, Int>>>()
 
     /** 比較履歴 */
-    protected val mComparisonHistories = mutableListOf<Pair<Int, Int>>()
+    private val mComparisonHistories = mutableListOf<Pair<Int, Int>>()
 
 
     /**
@@ -103,6 +103,14 @@ abstract class ISort(private val mTargetData: MutableList<Int>) {
             mComparisonHistories.add(Pair(frontIndex, backIndex))
             mSortHistories.add(emptyMap())
             false
+        }
+    }
+
+    protected fun saveComparisonHistory(frontIndex: Int, backIndex: Int) {
+        if (frontIndex > backIndex) {
+            mComparisonHistories.add(Pair(backIndex, frontIndex))
+        } else {
+            mComparisonHistories.add(Pair(frontIndex, backIndex))
         }
     }
 
