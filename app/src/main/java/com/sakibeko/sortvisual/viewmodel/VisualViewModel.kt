@@ -3,6 +3,7 @@
  */
 package com.sakibeko.sortvisual.viewmodel
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.MutableLiveData
@@ -14,7 +15,8 @@ import kotlin.random.Random
 /**
  * ViewModel:ソートアルゴリズム可視化画面
  */
-class VisualViewModel(targetSize: Int, algorithmId: Int) : ViewModel() {
+class VisualViewModel(context: Context, targetSize: Int, algorithmId: Int) :
+    ViewModel() {
 
     /**
      * 自動ソートフラグ.
@@ -33,6 +35,9 @@ class VisualViewModel(targetSize: Int, algorithmId: Int) : ViewModel() {
 
     /** 比較位置(追加) */
     val mAdditionalPosition = MutableLiveData<Int>()
+
+    /** 自動更新間隔 */
+    val mAutoInterval = MutableLiveData(getDefaultAutoInterval(context))
 
     /** ソートアルゴリズム */
     private val mSortAlgorithm: ISort
@@ -54,7 +59,8 @@ class VisualViewModel(targetSize: Int, algorithmId: Int) : ViewModel() {
             }
 
             if (mIsAutoProgress.value!!) {
-                mHandler.postDelayed(this, 100)
+                val intervalMs = 500L / mAutoInterval.value!!
+                mHandler.postDelayed(this, intervalMs)
             }
         }
     }
@@ -130,6 +136,14 @@ class VisualViewModel(targetSize: Int, algorithmId: Int) : ViewModel() {
         mFrontPosition.value = mSortAlgorithm.getFrontPosition()
         mBackPosition.value = mSortAlgorithm.getBackPosition()
         mAdditionalPosition.value = mSortAlgorithm.getAdditionalPosition()
+    }
+
+    /**
+     * 自動更新間隔の初期値を取得する.
+     */
+    private fun getDefaultAutoInterval(context: Context): Int {
+        return (context.resources.getInteger(R.integer.auto_interval_max) +
+                context.resources.getInteger(R.integer.auto_interval_min)) / 4
     }
 
 }

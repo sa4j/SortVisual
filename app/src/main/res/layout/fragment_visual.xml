@@ -23,43 +23,57 @@ Copyright 2021 sakibeko
             android:id="@+id/sort_result"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/button_sort_auto"
+            app:layout_constraintBottom_toTopOf="@id/seek_auto_interval"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <SeekBar
+            android:id="@+id/seek_auto_interval"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:max="@integer/auto_interval_max"
+            android:min="@integer/auto_interval_min"
+            android:padding="@dimen/seekbar_margin"
+            android:progress="@={viewModel.mAutoInterval}"
+            android:visibility="@{viewModel.mIsAutoProgress ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintBottom_toTopOf="@id/button_sort_auto"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sort_result" />
 
         <Button
             android:id="@+id/button_previous"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_button_previous"
-            android:visibility="@{viewModel.MIsAutoProgress ? View.INVISIBLE : View.VISIBLE}"
+            android:visibility="@{viewModel.mIsAutoProgress ? View.INVISIBLE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button_sort_auto"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sort_result" />
+            app:layout_constraintTop_toBottomOf="@+id/seek_auto_interval" />
 
         <ToggleButton
             android:id="@+id/button_sort_auto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="@{viewModel.MIsAutoProgress}"
+            android:checked="@{viewModel.mIsAutoProgress}"
             android:textOff="@string/label_sort_auto"
             android:textOn="@string/label_sort_manual"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button_next"
             app:layout_constraintStart_toEndOf="@+id/button_previous"
-            app:layout_constraintTop_toBottomOf="@+id/sort_result" />
+            app:layout_constraintTop_toBottomOf="@+id/seek_auto_interval" />
 
         <Button
             android:id="@+id/button_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_button_next"
-            android:visibility="@{viewModel.MIsAutoProgress ? View.INVISIBLE : View.VISIBLE}"
+            android:visibility="@{viewModel.mIsAutoProgress ? View.INVISIBLE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/button_sort_auto"
-            app:layout_constraintTop_toBottomOf="@+id/sort_result" />
+            app:layout_constraintTop_toBottomOf="@+id/seek_auto_interval" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

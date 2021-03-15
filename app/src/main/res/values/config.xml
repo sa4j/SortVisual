@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+Copyright 2021 sakibeko
+-->
+<resources>
+    <integer name="auto_interval_min">1</integer>
+    <integer name="auto_interval_max">10</integer>
+</resources>
